@@ -1,4 +1,5 @@
 ﻿using BooksSpring2024_sec02.Data;
+using BooksSpring2024_sec02.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BooksSpring2024_sec02.Controllers
@@ -18,5 +19,52 @@ namespace BooksSpring2024_sec02.Controllers
 
             return View(listOfCategories);
         }
+
+        [HttpGet]
+        public IActionResult Create() 
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+
+        public IActionResult Create(Category categoryObj) 
+        {
+            if (ModelState.IsValid) 
+            {
+                _dbContext.Categories.Add(categoryObj);
+                _dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Category");
+            }
+
+            return View(categoryObj);
+        }
+
+
+
+        public IActionResult Edit(int id)
+        {
+            Category category = _dbContext.Categories.Find(id);
+
+            return View(category);
+        }
+
+        [HttpPost]
+
+        public IActionResult Edit(int id, [Bind("CategoryID, Name, Description")] Category categoryObj)
+        {
+            if (ModelState.IsValid)
+            {
+                _dbContext.Categories.Update(categoryObj);
+                _dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Category");
+            }
+
+            return View(categoryObj);
+        }
+
     }
 }
