@@ -1,0 +1,10 @@
+﻿namespace BooksSpring2024_sec02.Models
+{
+    public class Category
+    {
+        public int CategoryId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+    }
+}
