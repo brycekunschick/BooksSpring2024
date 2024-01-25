@@ -31,6 +31,19 @@ namespace BooksSpring2024_sec02.Controllers
 
         public IActionResult Create(Category categoryObj) 
         {
+            //custom validation
+            if(categoryObj.Name != null && categoryObj.Name.ToLower() == "test")
+            {
+                ModelState.AddModelError("Name", "Category name cannot be 'test'");
+            }
+
+            //custom validation to make sure that name and description values are not exactly the same
+            if(categoryObj.Name == categoryObj.Description)
+            {
+                ModelState.AddModelError("Description", "Category name and description cannot be the same");
+            }
+
+
             if (ModelState.IsValid) 
             {
                 _dbContext.Categories.Add(categoryObj);
@@ -54,6 +67,28 @@ namespace BooksSpring2024_sec02.Controllers
         [HttpPost]
 
         public IActionResult Edit(int id, [Bind("CategoryID, Name, Description")] Category categoryObj)
+        {
+            if (ModelState.IsValid)
+            {
+                _dbContext.Categories.Update(categoryObj);
+                _dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Category");
+            }
+
+            return View(categoryObj);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Category category = _dbContext.Categories.Find(id);
+
+            return View(category);
+        }
+
+        [HttpPost]
+
+        public IActionResult Delete(int id, [Bind("CategoryID, Name, Description")] Category categoryObj)
         {
             if (ModelState.IsValid)
             {
