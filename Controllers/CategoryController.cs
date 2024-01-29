@@ -79,6 +79,7 @@ namespace BooksSpring2024_sec02.Controllers
             return View(categoryObj);
         }
 
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             Category category = _dbContext.Categories.Find(id);
@@ -87,19 +88,25 @@ namespace BooksSpring2024_sec02.Controllers
         }
 
         [HttpPost]
-
-        public IActionResult Delete(int id, [Bind("CategoryID, Name, Description")] Category categoryObj)
+        [ActionName("Delete")]
+        public IActionResult DeletePOST(int id)
         {
-            if (ModelState.IsValid)
-            {
-                _dbContext.Categories.Update(categoryObj);
-                _dbContext.SaveChanges();
+            Category categoryObj = _dbContext.Categories.Find(id);
 
-                return RedirectToAction("Index", "Category");
-            }
+            _dbContext.Categories.Remove(categoryObj);
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("Index", "Category");
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            Category categoryObj = _dbContext.Categories.Find(id); //fetches the record
 
             return View(categoryObj);
         }
+
 
     }
 }

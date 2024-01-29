@@ -21,8 +21,11 @@
 
                         <td>
                             <a asp-controller="Category" asp-action="Edit" asp-route-id="@eachCategory.CategoryId">Edit</a> |
-                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@eachCategory.CategoryId">Delete</a>
+                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@eachCategory.CategoryId">Delete</a> |
+                        <a asp-controller="Category" asp-action="Details" asp-route-id="@eachCategory.CategoryId">Details</a>
                         </td>
+                    
+
                     </tr>
                 }
             </tbody>
