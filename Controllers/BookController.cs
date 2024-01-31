@@ -15,9 +15,11 @@ namespace BooksSpring2024_sec02.Controllers
 
         }
 
-        public IActionResult Index() //do this individually
+        public IActionResult Index()//list or fetch all objects (books)
         {
-            return View();
+            var listOfBooks = _dbContext.Books.ToList();
+
+            return View(listOfBooks);
         }
 
         [HttpGet]
