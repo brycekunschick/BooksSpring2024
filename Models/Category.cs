@@ -13,7 +13,6 @@ namespace BooksSpring2024_sec02.Models
 
         [DisplayName("Category Description: ")]
         [Required(ErrorMessage = "The category description MUST be provided")]
-        [MaxLength(20, ErrorMessage = "Description cannot exceed 20 characters")]
         public string Description { get; set; }
 
     }

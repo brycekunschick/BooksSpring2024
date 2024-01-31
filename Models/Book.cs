@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BooksSpring2024_sec02.Models
@@ -8,6 +9,7 @@ namespace BooksSpring2024_sec02.Models
         [Key]
         public int BookId { get; set; }
 
+        [DisplayName("Book Title")]
         public string BookTitle { get; set; }
 
         public string Author { get; set; }
