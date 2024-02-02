@@ -20,6 +20,6 @@ namespace BooksSpring2024_sec02.Models
 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
-        public Category Category { get; set; } //navigational property
+        public Category? Category { get; set; } //navigational property
     }
 }

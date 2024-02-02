@@ -1,5 +1,6 @@
 ﻿using BooksSpring2024_sec02.Data;
 using BooksSpring2024_sec02.Models;
+using BooksSpring2024_sec02.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -31,22 +32,37 @@ namespace BooksSpring2024_sec02.Controllers
                 Value = u.CategoryId.ToString()
             });
 
-            return View();
+            //PROJECTION: allows us to project a category object to a SelectListItem object, where the name of the category is used as the text and the CategoryID is used as the value of the SelectListItem
+
+            //1. ViewBag: allows us to transfer some data from the controller to the view. Much more simple
+            //ViewBag.ListOfCategories = listOfCategories;
+
+            //2. ViewData: allows us to pass data from the controller to the view (not vice versa)
+            //ViewData["ListOfCategoriesVD"] = listOfCategories;
+
+            //3. ViewModel: Make an additional model folder in the solution explorer.  (2/1 lecture) ... more complex
+            BookWithCategoriesVM bookWithCategoriesVMobj = new BookWithCategoriesVM();
+
+            bookWithCategoriesVMobj.Book = new Book();
+
+            bookWithCategoriesVMobj.ListOfCategories = listOfCategories;
+
+            return View(bookWithCategoriesVMobj);
 
         }
 
         [HttpPost]
-        public IActionResult Create(Book bookObj)
+        public IActionResult Create(BookWithCategoriesVM BookWithCategoriesVMobj)
         {
             if (ModelState.IsValid)
             {
-                _dbContext.Books.Add(bookObj);
+                _dbContext.Books.Add(BookWithCategoriesVMobj.Book);
                 _dbContext.SaveChanges();
 
                 return RedirectToAction("Index", "Book");
             }
 
-            return View(bookObj);
+            return View(BookWithCategoriesVMobj);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿@model Book
+﻿@model BookWithCategoriesVM
 
 <h1>Add a New Book</h1>
 
@@ -8,33 +8,39 @@
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="form-group m-4">
-            <label asp-for="BookTitle" class="control-label"></label>
-            <input asp-for="BookTitle" class="form-control" />
-            <span asp-validation-for="BookTitle" class="text-danger"></span>
+            <label asp-for="Book.BookTitle" class="control-label"></label>
+            <input asp-for="Book.BookTitle" class="form-control" />
+            <span asp-validation-for="Book.BookTitle" class="text-danger"></span>
         </div>
 
         <div class="form-group m-4">
-            <label asp-for="Author" class="control-label"></label>
-            <input asp-for="Author" class="form-control" />
-            <span asp-validation-for="Author" class="text-danger"></span>
+            <label asp-for="Book.Author" class="control-label"></label>
+            <input asp-for="Book.Author" class="form-control" />
+            <span asp-validation-for="Book.Author" class="text-danger"></span>
         </div>
 
         <div class="form-group m-4">
-            <label asp-for="Description" class="control-label"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
+            <label asp-for="Book.Description" class="control-label"></label>
+            <input asp-for="Book.Description" class="form-control" />
+            <span asp-validation-for="Book.Description" class="text-danger"></span>
         </div>
 
         <div class="form-group m-4">
-            <label asp-for="Price" class="control-label"></label>
-            <input asp-for="Price" class="form-control" />
-            <span asp-validation-for="Price" class="text-danger"></span>
+            <label asp-for="Book.Price" class="control-label"></label>
+            <input asp-for="Book.Price" class="form-control" />
+            <span asp-validation-for="Book.Price" class="text-danger"></span>
         </div>
 
         <div class="form-group m-4">
-            <label asp-for="CategoryId" class="control-label"></label>
-            <input asp-for="CategoryId" class="form-control" />
-            <span asp-validation-for="CategoryId" class="text-danger"></span>
+            <label asp-for="Book.CategoryId" class="control-label"></label>
+            
+            <select asp-for="Book.CategoryId" class="form-control" asp-items="@Model.ListOfCategories">
+
+                <option disabled selected>Select a category</option>
+
+            </select>
+            
+            <span asp-validation-for="Book.CategoryId" class="text-danger"></span>
         </div>
 
         <div class="form-group m-4">
