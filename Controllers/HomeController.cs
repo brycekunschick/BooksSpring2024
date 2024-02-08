@@ -1,21 +1,29 @@
+using BooksSpring2024_sec02.Data;
 using BooksSpring2024_sec02.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace BooksSpring2024_sec02.Controllers
 {
     public class HomeController : Controller
     {
+        private BooksDBContext _dbContext;
+
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, BooksDBContext booksDBContext) //dependency injection after the comma here
         {
             _logger = logger;
+
+            _dbContext = booksDBContext;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var listOfBooks = _dbContext.Books.Include(c => c.Category);
+
+            return View(listOfBooks.ToList()); //you can delay the tolist to this part
         }
 
         public IActionResult Privacy()
