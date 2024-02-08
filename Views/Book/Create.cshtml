@@ -3,7 +3,7 @@
 <h1>Add a New Book</h1>
 
 <div class="border col-md-10">
-    <form asp-action="Create">
+    <form asp-action="Create" enctype="multipart/form-data">
 
         <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -41,6 +41,14 @@
             </select>
             
             <span asp-validation-for="Book.CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group m-4">
+            <label asp-for="Book.imgUrl" class="control-label"></label>
+            <input type="file" name="imgFile" asp-for="Book.imgUrl" class="form-control" />
+
+
+            
         </div>
 
         <div class="form-group m-4">

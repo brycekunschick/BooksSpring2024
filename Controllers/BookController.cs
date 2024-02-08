@@ -9,10 +9,12 @@ namespace BooksSpring2024_sec02.Controllers
     public class BookController : Controller
     {
         private BooksDBContext _dbContext;
+        private IWebHostEnvironment _environment; //provides information about the web hosting environment and applications running in it, it's able to look into the project and find the path to images in the wwwroot folder. In order to work with this you have to inject it into the controller
 
-        public BookController(BooksDBContext context)
+        public BookController(BooksDBContext context, IWebHostEnvironment environment)
         {
             _dbContext = context; // passes the dbContext object to the instance variable. this is how you inject your database into the controller, called dependency injection
+            _environment = environment; //passes the environment to the instance variable (injection)
 
         }
 
@@ -52,10 +54,26 @@ namespace BooksSpring2024_sec02.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(BookWithCategoriesVM BookWithCategoriesVMobj)
+        public IActionResult Create(BookWithCategoriesVM BookWithCategoriesVMobj, IFormFile imgFile)
         {
             if (ModelState.IsValid)
             {
+                string wwwrootPath = _environment.WebRootPath; //this simplifies finding the path to the webroot folder
+
+                if(imgFile != null) 
+                {
+                    using (var fileStream = new FileStream(Path.Combine(wwwrootPath,@"Images\BookImages\" + imgFile.FileName),FileMode.Create) )
+                    {
+
+                        imgFile.CopyTo(fileStream);//saves the file in the specified folder
+
+                    }
+
+                    BookWithCategoriesVMobj.Book.imgUrl = @"\Images\BookImages\" + imgFile.FileName;
+
+
+                }
+
                 _dbContext.Books.Add(BookWithCategoriesVMobj.Book);
                 _dbContext.SaveChanges();
 

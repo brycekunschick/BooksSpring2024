@@ -47,7 +47,8 @@ namespace BooksSpring2024_sec02.Data
                     Author = "David Grann",
                     Description = "A Tale of Shipwreck, mutiny and murder",
                     Price = 19.99m,
-                    CategoryId = 1
+                    CategoryId = 1,
+                    imgUrl = ""
                 },
 
                 new Book
@@ -57,7 +58,8 @@ namespace BooksSpring2024_sec02.Data
                     Author = "Amy McCulloch",
                     Description = "In this pulse-pounding thriller, a once-in-a-lifetime trip to Antarctica",
                     Price = 15.99m,
-                    CategoryId = 2
+                    CategoryId = 2,
+                    imgUrl = ""
                 },
 
                 new Book
@@ -67,7 +69,8 @@ namespace BooksSpring2024_sec02.Data
                     Author = "Ray Naylor",
                     Description = "Moscow has resurrected the mammoth. But someone must teach them how to be mammoth, or they are doomed to die out again.",
                     Price = 25.99m,
-                    CategoryId = 3
+                    CategoryId = 3,
+                    imgUrl = ""
                 }
 
                 );

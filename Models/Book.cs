@@ -18,6 +18,8 @@ namespace BooksSpring2024_sec02.Models
 
         public decimal Price { get; set; }
 
+        public string? imgUrl { get; set; }
+
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category? Category { get; set; } //navigational property
