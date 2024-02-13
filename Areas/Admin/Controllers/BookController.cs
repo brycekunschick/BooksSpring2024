@@ -4,8 +4,10 @@ using BooksSpring2024_sec02.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace BooksSpring2024_sec02.Controllers
+namespace BooksSpring2024_sec02.Areas.Admin.Controllers
 {
+
+    [Area("Admin")]
     public class BookController : Controller
     {
         private BooksDBContext _dbContext;
@@ -60,9 +62,9 @@ namespace BooksSpring2024_sec02.Controllers
             {
                 string wwwrootPath = _environment.WebRootPath; //this simplifies finding the path to the webroot folder
 
-                if(imgFile != null) 
+                if (imgFile != null)
                 {
-                    using (var fileStream = new FileStream(Path.Combine(wwwrootPath,@"Images\BookImages\" + imgFile.FileName),FileMode.Create) )
+                    using (var fileStream = new FileStream(Path.Combine(wwwrootPath, @"Images\BookImages\" + imgFile.FileName), FileMode.Create))
                     {
 
                         imgFile.CopyTo(fileStream);//saves the file in the specified folder

@@ -1,5 +1,6 @@
 using BooksSpring2024_sec02.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace BooksSpring2024_sec02
 {
@@ -18,6 +19,9 @@ namespace BooksSpring2024_sec02
             //2) Add the context class to the set of services and define the option to use SQL Server on that connection string that has been fetched in the previous line
             builder.Services.AddDbContext<BooksDBContext>(options => options.UseSqlServer(connString));
 
+            builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<BooksDBContext>();
+            builder.Services.AddRazorPages();
+
 
 
             var app = builder.Build();
@@ -35,11 +39,15 @@ namespace BooksSpring2024_sec02
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{Area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

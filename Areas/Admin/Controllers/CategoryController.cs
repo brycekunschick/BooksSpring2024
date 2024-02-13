@@ -2,8 +2,10 @@
 using BooksSpring2024_sec02.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BooksSpring2024_sec02.Controllers
+namespace BooksSpring2024_sec02.Areas.Admin.Controllers
 {
+
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private BooksDBContext _dbContext;
@@ -21,7 +23,7 @@ namespace BooksSpring2024_sec02.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
 
             return View();
@@ -29,22 +31,22 @@ namespace BooksSpring2024_sec02.Controllers
 
         [HttpPost]
 
-        public IActionResult Create(Category categoryObj) 
+        public IActionResult Create(Category categoryObj)
         {
             //custom validation
-            if(categoryObj.Name != null && categoryObj.Name.ToLower() == "test")
+            if (categoryObj.Name != null && categoryObj.Name.ToLower() == "test")
             {
                 ModelState.AddModelError("Name", "Category name cannot be 'test'");
             }
 
             //custom validation to make sure that name and description values are not exactly the same
-            if(categoryObj.Name == categoryObj.Description)
+            if (categoryObj.Name == categoryObj.Description)
             {
                 ModelState.AddModelError("Description", "Category name and description cannot be the same");
             }
 
 
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 _dbContext.Categories.Add(categoryObj);
                 _dbContext.SaveChanges();

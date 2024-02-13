@@ -1,9 +1,11 @@
 ﻿using BooksSpring2024_sec02.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BooksSpring2024_sec02.Data
 {
-    public class BooksDBContext : DbContext
+    public class BooksDBContext : IdentityDbContext<IdentityUser>
     {
         public BooksDBContext(DbContextOptions<BooksDBContext> options)
             :base(options)
@@ -18,6 +20,9 @@ namespace BooksSpring2024_sec02.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
 
                 new Category { 

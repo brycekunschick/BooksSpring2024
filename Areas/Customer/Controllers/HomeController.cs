@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace BooksSpring2024_sec02.Controllers
+namespace BooksSpring2024_sec02.Areas.Customer.Controllers
 {
+
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private BooksDBContext _dbContext;
