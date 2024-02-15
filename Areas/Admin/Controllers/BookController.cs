@@ -85,5 +85,62 @@ namespace BooksSpring2024_sec02.Areas.Admin.Controllers
             return View(BookWithCategoriesVMobj);
         }
 
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            IEnumerable<SelectListItem> listOfCategories = _dbContext.Categories.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.CategoryId.ToString()
+            });
+
+            BookWithCategoriesVM bookWithCategoriesVMobj = new BookWithCategoriesVM();
+
+            bookWithCategoriesVMobj.Book = _dbContext.Books.Find(id);
+
+            bookWithCategoriesVMobj.ListOfCategories = listOfCategories;
+
+            return View(bookWithCategoriesVMobj);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, BookWithCategoriesVM bookWithCategoriesVMobj)
+        {
+            var bookInDb = _dbContext.Books.Find(id);
+
+                if (ModelState.IsValid)
+            {
+                // updating each field (excluding imgURL)
+                bookInDb.BookTitle = bookWithCategoriesVMobj.Book.BookTitle;
+                bookInDb.Author = bookWithCategoriesVMobj.Book.Author;
+                bookInDb.Description = bookWithCategoriesVMobj.Book.Description;
+                bookInDb.Price = bookWithCategoriesVMobj.Book.Price;
+                bookInDb.CategoryId = bookWithCategoriesVMobj.Book.CategoryId;
+
+                _dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Book");
+            }
+
+            // if model state not valid, get viewmodel properties again
+            IEnumerable<SelectListItem> listOfCategories = _dbContext.Categories.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.CategoryId.ToString()
+            });
+
+            BookWithCategoriesVM bookWithCategoriesVMobj2 = new BookWithCategoriesVM();
+
+            bookWithCategoriesVMobj2.Book = _dbContext.Books.Find(id);
+
+            bookWithCategoriesVMobj2.ListOfCategories = listOfCategories;
+
+
+
+            return View(bookWithCategoriesVMobj2);
+        }
+        
+
     }
 }
