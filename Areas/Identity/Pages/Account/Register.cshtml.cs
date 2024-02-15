@@ -25,6 +25,7 @@ namespace BooksSpring2024_sec02.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -33,12 +34,16 @@ namespace BooksSpring2024_sec02.Areas.Identity.Pages.Account
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
+            RoleManager<IdentityRole> roleManager, //brings in the RoleManager table through this variable
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
+
+            _roleManager = roleManager; //gives the capability to talk to the AspNetRoles table
+
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
@@ -102,6 +107,18 @@ namespace BooksSpring2024_sec02.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            //creating the roles
+            if(!_roleManager.RoleExistsAsync("Customer").GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole("Customer")).GetAwaiter().GetResult();
+
+                _roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
+
+                _roleManager.CreateAsync(new IdentityRole("Employee")).GetAwaiter().GetResult();
+
+            }
+
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -121,6 +138,10 @@ namespace BooksSpring2024_sec02.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+
+                    await _userManager.AddToRoleAsync(user, "Customer"); //assigning the user that was just created to the customer role
+
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -158,7 +179,7 @@ namespace BooksSpring2024_sec02.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
