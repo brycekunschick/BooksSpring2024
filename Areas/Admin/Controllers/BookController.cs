@@ -89,56 +89,67 @@ namespace BooksSpring2024_sec02.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            Book book = _dbContext.Books.Find(id);
+
             IEnumerable<SelectListItem> listOfCategories = _dbContext.Categories.ToList().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.CategoryId.ToString()
             });
 
-            BookWithCategoriesVM bookWithCategoriesVMobj = new BookWithCategoriesVM();
+            BookWithCategoriesVM bookWithCategoriesVM = new BookWithCategoriesVM();
 
-            bookWithCategoriesVMobj.Book = _dbContext.Books.Find(id);
+            bookWithCategoriesVM.Book = book;
 
-            bookWithCategoriesVMobj.ListOfCategories = listOfCategories;
+            bookWithCategoriesVM.ListOfCategories = listOfCategories;
 
-            return View(bookWithCategoriesVMobj);
+            return View(bookWithCategoriesVM);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, BookWithCategoriesVM bookWithCategoriesVMobj)
+        public IActionResult Edit(BookWithCategoriesVM bookWithCategoriesVM, IFormFile imgFile)
         {
-            var bookInDb = _dbContext.Books.Find(id);
-
-                if (ModelState.IsValid)
+            string wwwrootPath = _environment.WebRootPath;
+            if (ModelState.IsValid)
             {
-                // updating each field (excluding imgURL)
-                bookInDb.BookTitle = bookWithCategoriesVMobj.Book.BookTitle;
-                bookInDb.Author = bookWithCategoriesVMobj.Book.Author;
-                bookInDb.Description = bookWithCategoriesVMobj.Book.Description;
-                bookInDb.Price = bookWithCategoriesVMobj.Book.Price;
-                bookInDb.CategoryId = bookWithCategoriesVMobj.Book.CategoryId;
+                
+                if (imgFile != null) //is there a file to add?
+                {
+                    if(!string.IsNullOrEmpty(bookWithCategoriesVM.Book.imgUrl)) //do we have an existing file? if so, delete it
+                    {
+                        var oldImgPath = Path.Combine(wwwrootPath, bookWithCategoriesVM.Book.imgUrl.TrimStart('\\')); //trim start because the root path ends with a "\" and the imgURL starts with a "\"
+                        //need to fix the issue with the wwwrootpath here
 
+                        if(System.IO.File.Exists(oldImgPath))
+                        {
+                            System.IO.File.Delete(oldImgPath);
+
+                        }
+
+                    }
+
+                    //if there is no existing file, or the existing file has been deleted, the new file is added
+                    using (var fileStream = new FileStream(Path.Combine(wwwrootPath, @"Images\BookImages\" + imgFile.FileName), FileMode.Create))
+                    {
+
+                        imgFile.CopyTo(fileStream);//saves the file in the specified folder
+
+                    }
+
+                    bookWithCategoriesVM.Book.imgUrl = @"\Images\BookImages\" + imgFile.FileName;
+
+                }
+
+                _dbContext.Books.Update(bookWithCategoriesVM.Book);
                 _dbContext.SaveChanges();
 
-                return RedirectToAction("Index", "Book");
+                return RedirectToAction("Index");
+
+
             }
 
-            // if model state not valid, get viewmodel properties again
-            IEnumerable<SelectListItem> listOfCategories = _dbContext.Categories.ToList().Select(u => new SelectListItem
-            {
-                Text = u.Name,
-                Value = u.CategoryId.ToString()
-            });
+            return View(bookWithCategoriesVM); //things did not work as expected
 
-            BookWithCategoriesVM bookWithCategoriesVMobj2 = new BookWithCategoriesVM();
-
-            bookWithCategoriesVMobj2.Book = _dbContext.Books.Find(id);
-
-            bookWithCategoriesVMobj2.ListOfCategories = listOfCategories;
-
-
-
-            return View(bookWithCategoriesVMobj2);
         }
         
 
