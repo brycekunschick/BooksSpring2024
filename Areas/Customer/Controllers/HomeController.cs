@@ -28,6 +28,21 @@ namespace BooksSpring2024_sec02.Areas.Customer.Controllers
             return View(listOfBooks.ToList()); //you can delay the tolist to this part
         }
 
+        public IActionResult Details(int id)
+        {
+            Book book = _dbContext.Books.Find(id);
+
+
+            _dbContext.Books.Entry(book).Reference(b => b.Category).Load(); // loads the category
+
+            //to do: Create cart object
+
+            return View(book);
+
+
+        }
+
+
         public IActionResult Privacy()
         {
             return View();
