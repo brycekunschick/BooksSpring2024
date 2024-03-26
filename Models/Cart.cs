@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BooksSpring2024_sec02.Models
 {
@@ -9,11 +10,13 @@ namespace BooksSpring2024_sec02.Models
         public int BookId { get; set; }
         
         [ForeignKey("BookId")]
-        public Book Book { get; set; }
+        [ValidateNever]
+        public Book Book { get; set; } //navigational property
         public string UserId { get; set; }
         
         [ForeignKey("UserId")]
-        public ApplicationUser ApplicationUser { get; set; }
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; } //navigational property
 
         public int Quantity { get; set; }
 

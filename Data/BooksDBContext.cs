@@ -19,6 +19,8 @@ namespace BooksSpring2024_sec02.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }//add the identityuser class extension (with more attributes) to the database
 
+        public DbSet<Cart> Carts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
