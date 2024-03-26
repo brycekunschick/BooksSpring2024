@@ -1,0 +1,46 @@
+﻿@model ShoppingCartVM
+
+<form method="post">
+
+    <div class="card text-center rounded shadow">
+        <div class="row m-3 px-4">
+            <div class="col-12 text-start bg-primary rounded py-2 my-3">
+                <p class="card-title text-start text-white">Shopping Cart</p>
+            </div>
+
+            <div class="col-12">
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="row border-bottom my-4">
+                        <div class="col-2 text-center">
+
+                            <img src="@item.Book.imgUrl" class="card-img-top rounded" style="width:150px;height:200px" />
+                        </div>
+
+                        <div class="col-6">
+                            <h5 class="text-uppercase text-secondary">
+                                <strong>@item.Book.BookTitle</strong>
+                            </h5>
+
+                            <p class="text-muted">
+                                <small>
+                                @item.Book.Description
+                                </small>
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                }
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</form>

@@ -58,7 +58,21 @@ namespace BooksSpring2024_sec02.Areas.Customer.Controllers
 
             cart.UserId = userId;
 
-            _dbContext.Carts.Add(cart);
+            Cart existingCart = _dbContext.Carts.FirstOrDefault(c => c.UserId == userId && c.BookId == cart.BookId); // check if the cart matches the user ID, and check if the book id matches anything in the cart
+
+            if (existingCart != null) //cart exists already
+            {
+                //update the cart
+                existingCart.Quantity += cart.Quantity;
+                _dbContext.Carts.Update(existingCart);
+            }
+            else
+            {
+                //add the new item in the carts table
+                _dbContext.Carts.Add(cart);
+            }
+
+
             _dbContext.SaveChanges();
 
             return RedirectToAction("Index");
