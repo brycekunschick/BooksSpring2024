@@ -12,7 +12,6 @@ namespace BooksSpring2024_sec02.Models
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
-        public DateOnly OrderDate {  get; set; }
         public string CustomerName { get; set; }
         public string StreetAddress { get; set; }
         public string City { get; set; }
@@ -20,5 +19,11 @@ namespace BooksSpring2024_sec02.Models
         public string PostalCode { get; set; }
         public string Phone {  get; set; }
         public decimal OrderTotal { get; set; }
+
+        public string OrderStatus { get; set; }
+
+        public string PaymentStatus { get; set; }
+
+        public DateOnly OrderDate { get; set; }
     }
 }
