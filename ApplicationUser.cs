@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BooksSpring2024_sec02
 {
@@ -15,5 +16,8 @@ namespace BooksSpring2024_sec02
         public string? PostalCode { get; set; }
 
         public string? State { get; set; }
+
+        [NotMapped]
+        public string? RoleName { get; set; }
     }
 }
