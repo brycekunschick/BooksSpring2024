@@ -135,6 +135,41 @@
                     Order Total: @Model.Order.OrderTotal.ToString("c")
                 </div>
 
+                @if (Model.Order.OrderStatus == "Pending")
+                {
+                    <div class="my-5">
+
+                        <button type="submit" asp-action="ProcessOrder" class="btn btn-primary form-control">Process Order</button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="my-5">
+
+                        <button type="submit" disabled asp-action="ProcessOrder" class="btn btn-primary form-control">Process Order</button>
+
+                    </div>
+                }
+
+                @if (Model.Order.OrderStatus == "Processing")
+                {
+                    <div class="my-5">
+
+                        <button type="submit" asp-action="CompleteOrder" class="btn btn-primary form-control">Complete Order</button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="my-5">
+
+                        <button type="submit" disabled asp-action="CompleteOrder" class="btn btn-primary form-control">Complete Order</button>
+
+                    </div>
+                }
+
+
             </div>
 
            
