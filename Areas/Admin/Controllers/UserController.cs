@@ -1,5 +1,6 @@
 ﻿using BooksSpring2024_sec02.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,9 +15,13 @@ namespace BooksSpring2024_sec02.Areas.Admin.Controllers
 
         private BooksDBContext _dbContext;
 
-        public UserController(BooksDBContext dbContext)
+        private UserManager<IdentityUser> _userManager;
+
+        public UserController(BooksDBContext dbContext, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
+
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -90,6 +95,26 @@ namespace BooksSpring2024_sec02.Areas.Admin.Controllers
             ViewBag.UserInfo = _dbContext.ApplicationUsers.Find(id);
 
             return View(currentUserRole);
+
+        }
+
+        [HttpPost]
+        public IActionResult EditUserRole(Microsoft.AspNetCore.Identity.IdentityUserRole<string> updatedRole)
+        {
+
+            ApplicationUser applicationUser = _dbContext.ApplicationUsers.Find(updatedRole.UserId);
+
+            string newRoleName = _dbContext.Roles.Find(updatedRole.RoleId).Name;
+
+            string oldRoleId = _dbContext.UserRoles.FirstOrDefault(u => u.UserId == applicationUser.Id).RoleId;
+
+            string oldRoleName = _dbContext.Roles.Find(oldRoleId).Name;
+
+            _userManager.RemoveFromRoleAsync(applicationUser, oldRoleName).GetAwaiter().GetResult();
+
+            _userManager.AddToRoleAsync(applicationUser, newRoleName).GetAwaiter().GetResult();
+
+            return RedirectToAction("Index");
 
         }
 

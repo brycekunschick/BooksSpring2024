@@ -2,6 +2,7 @@ using BooksSpring2024_sec02.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Stripe;
 
 namespace BooksSpring2024_sec02
 {
@@ -19,6 +20,11 @@ namespace BooksSpring2024_sec02
 
             //2) Add the context class to the set of services and define the option to use SQL Server on that connection string that has been fetched in the previous line
             builder.Services.AddDbContext<BooksDBContext>(options => options.UseSqlServer(connString));
+
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+
 
             builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<BooksDBContext>().AddDefaultTokenProviders();
 
@@ -57,6 +63,14 @@ namespace BooksSpring2024_sec02
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
+
+
+
+
 
             app.MapControllerRoute(
                 name: "default",

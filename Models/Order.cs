@@ -32,5 +32,9 @@ namespace BooksSpring2024_sec02.Models
 
         public DateOnly? ShippingDate { get; set; }
 
+        public string? SessionID { get; set; }
+
+        public string? PaymentIntentID { get; set; }
+
     }
 }
