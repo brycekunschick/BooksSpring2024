@@ -25,5 +25,12 @@ namespace BooksSpring2024_sec02.Models
         public string PaymentStatus { get; set; }
 
         public DateOnly OrderDate { get; set; }
+
+        public string? Carrier {  get; set; }
+
+        public string? TrackingNumber { get; set; }
+
+        public DateOnly? ShippingDate { get; set; }
+
     }
 }

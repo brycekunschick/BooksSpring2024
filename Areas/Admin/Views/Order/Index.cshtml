@@ -26,8 +26,26 @@
             </thead>
 
             <tbody>
+                @foreach(var eachOrder in Model)
+                {
+                    <tr>
+
+                        <td>@eachOrder.OrderId</td>
+                        <td>@eachOrder.OrderDate</td>
+                        <td>@eachOrder.CustomerName</td>
+                        <td>@eachOrder.OrderTotal</td>
+                        <td>@eachOrder.OrderStatus</td>
+                        <td>@eachOrder.Phone</td>
+                        <td>@eachOrder.ApplicationUser.Email</td>
+
+                        <td>
+                            <a asp-controller="Order" asp-action="Details" asp-route-id="@eachOrder.OrderId">Details</a>
+                        </td>
+
+                    </tr>
 
 
+                }
 
             </tbody>
 
