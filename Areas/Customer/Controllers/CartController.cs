@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace BooksSpring2024_sec02.Areas.Customer.Controllers
@@ -200,23 +201,60 @@ namespace BooksSpring2024_sec02.Areas.Customer.Controllers
 
             var options = new Stripe.Checkout.SessionCreateOptions
             {
-                SuccessUrl = "https://example.com/success",
-                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
-    {
-        new Stripe.Checkout.SessionLineItemOptions
-        {
-            Price = "price_1MotwRLkdIwHu7ixYcPLm5uZ",
-            Quantity = 2,
-        },
-    },
+                SuccessUrl = "https://localhost:7166/" + $"customer/cart/orderconfirmation?id={shoppingCartVM.Order.OrderId}",
+
+                CancelUrl = "https://localhost:7166/" + "customer/cart/index",
+
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+    //{
+    //    new Stripe.Checkout.SessionLineItemOptions
+    //    {
+    //        Price = "price_1MotwRLkdIwHu7ixYcPLm5uZ",
+    //        Quantity = 2,
+    //    },
+    //},
                 Mode = "payment",
             };
+
+            foreach(var eachCartItem in shoppingCartVM.CartItems)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(eachCartItem.Book.Price*100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = eachCartItem.Book.BookTitle
+                        }
+                    },
+
+                    Quantity = eachCartItem.Quantity,
+
+
+                };
+
+                options.LineItems.Add(sessionLineItem);
+
+
+
+            }
+
+
             var service = new Stripe.Checkout.SessionService();
-            service.Create(options);
+            Session session = service.Create(options);
+
+            shoppingCartVM.Order.SessionID = session.Id;
+
+            _dbContext.SaveChanges();
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
 
 
 
-            return RedirectToAction("OrderConfirmation", new { id = shoppingCartVM.Order.OrderId});
+            //return RedirectToAction("OrderConfirmation", new { id = shoppingCartVM.Order.OrderId});
 
         }
         
@@ -225,6 +263,23 @@ namespace BooksSpring2024_sec02.Areas.Customer.Controllers
         public IActionResult OrderConfirmation(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Order order = _dbContext.Orders.Find(id);
+
+            var sessID = order.SessionID;
+
+            var service = new SessionService();
+
+            Session session = service.Get(sessID);
+
+
+            if(session.PaymentStatus.ToLower() == "paid")
+            {
+                order.PaymentIntentID = session.PaymentIntentId;
+                order.PaymentStatus = "Approved";
+            }
+
+
 
             List<Cart> listOfCartItems = _dbContext.Carts.ToList().Where(c => c.UserId == userId).ToList();
 
